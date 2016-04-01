@@ -14,7 +14,8 @@ public class ClienteVo {
     private int idCliente;
     private String nombre;
     private String correo;
-    private String teléfono;
+    private String telefono;
+    private boolean estado;
 
     /**
      * @return the idCliente
@@ -61,16 +62,29 @@ public class ClienteVo {
     /**
      * @return the teléfono
      */
-    public String getTeléfono() {
-        return teléfono;
+    public String getTelefono() {
+        return telefono;
     }
 
     /**
      * @param teléfono the teléfono to set
      */
-    public void setTeléfono(String teléfono) {
-        this.teléfono = teléfono;
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
-   
-    
+
+    /**
+     * @return the estado
+     */
+    public boolean isEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
+
 }
