@@ -10,6 +10,7 @@ import co.edu.intecap.clinicaveterinaria.modelo.vo.ClienteVo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class ClienteDao extends Conexion implements GenericoDao<ClienteVo> {
         PreparedStatement sentencia;
         try {
             conectar();
-            String sql = "insert into mascota(nombre,correo,telefono,estado) values(?,?,?,?)";
+            String sql = "insert into cliente(nombre,correo,telefono,estado) values(?,?,?,?)";
             sentencia = cnn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             
             sentencia.setString(1, object.getNombre());
@@ -47,21 +48,72 @@ public class ClienteDao extends Conexion implements GenericoDao<ClienteVo> {
     public void editar(ClienteVo object) {
         PreparedStatement sentencia;
         try {
-            conec
+            conectar();
+            String sql = "update mascota set id_cliente = ?, nombre = ?, correo = ?, telefono = ?, estado =  where id_cliente = ?";
+            sentencia = cnn.prepareStatement(sql);
+            sentencia.setInt(1, object.getIdCliente());
+            sentencia.setString(2, object.getNombre());
+            sentencia.setString(3, object.getCorreo());
+            sentencia.setString(4, object.getTelefono());
+            sentencia.setBoolean(5, object.isEstado());
+ 
+            sentencia.executeUpdate(); // ejecutar la actualización
         } catch (Exception e) {
+            e.printStackTrace(System.err);
         } finally {
-            desconectar;
-        }
+            desconectar();
+        }       
     }
 
     @Override
     public List<ClienteVo> consultar() {
-        return null;
+        PreparedStatement sentencia;
+        List<ClienteVo> lista = new ArrayList<>();
+        try {
+            conectar();
+            String sql = "select * from cliente";
+            sentencia = cnn.prepareStatement(sql);        
+            ResultSet rs = sentencia.executeQuery();
+            while (rs.next()) {
+                ClienteVo cliente = new ClienteVo();
+                cliente.setIdCliente(rs.getInt("id_cliente"));
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setCorreo(rs.getString("correo"));
+                cliente.setTelefono(rs.getString("telefono"));
+                cliente.setEstado(rs.getBoolean("estado"));
+                lista.add(cliente);
+            }                    
+        } catch (Exception e) {
+        } finally {
+            desconectar();
+        }
+        return lista;
     }
 
     @Override
     public ClienteVo consultar(int id) {
-        return null;
+        PreparedStatement sentencia;
+        ClienteVo obj = new ClienteVo();
+        try {
+            conectar();
+            String sql = "select * from cliente where = id_cliente = ?";
+            sentencia = cnn.prepareStatement(sql);
+            sentencia.setInt(1, id);            
+            ResultSet rs = sentencia.executeQuery();
+            if (rs.next()){
+            obj.setIdCliente(rs.getInt("id_cliente"));
+            obj.setNombre(rs.getString("nombre"));
+            obj.setCorreo(rs.getString("correo"));
+            obj.setTelefono(rs.getString("telefono"));
+            obj.setEstado(rs.getBoolean("estado"));
+                            
+            } 
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        } finally {
+            desconectar();
+        }
+            return obj;
     }
     
     
