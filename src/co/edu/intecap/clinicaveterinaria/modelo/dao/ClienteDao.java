@@ -49,7 +49,7 @@ public class ClienteDao extends Conexion implements GenericoDao<ClienteVo> {
         PreparedStatement sentencia;
         try {
             conectar();
-            String sql = "update mascota set id_cliente = ?, nombre = ?, correo = ?, telefono = ?, estado =  where id_cliente = ?";
+            String sql = "update cliente set id_cliente = ?, nombre = ?, correo = ?, telefono = ?, estado =  where id_cliente = ?";
             sentencia = cnn.prepareStatement(sql);
             sentencia.setInt(1, object.getIdCliente());
             sentencia.setString(2, object.getNombre());

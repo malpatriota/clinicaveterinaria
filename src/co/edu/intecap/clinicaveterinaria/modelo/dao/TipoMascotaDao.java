@@ -20,10 +20,10 @@ public class TipoMascotaDao extends Conexion implements GenericoDao<TipoMascotaV
 
     @Override
     public void insertar(TipoMascotaVo object) {
-        PreparedStatement sentencia;
+        PreparedStatement sentencia = null;
         try {
             conectar();
-            String sql = "insert into id_mascota(nombre,estado) values(?,?)";
+            String sql = "insert into id_tipo_mascota (nombre,estado) values(?,?)";
             sentencia = cnn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             
             sentencia.setString(1, object.getNombre());
@@ -46,7 +46,7 @@ public class TipoMascotaDao extends Conexion implements GenericoDao<TipoMascotaV
         PreparedStatement sentencia;
         try {
             conectar();
-             String sql = "update tipomascota set id_mascota = ?, nombre = ?, estado = ?, telefono = ?, estado =  where id_cliente = ?";
+             String sql = "update tipo_mascota set id_tipo_mascota = ?, nombre = ?, estado =  where id_tipo_mascota = ?";
         } catch (Exception e) {
             e.printStackTrace(System.err);
         } finally {
@@ -57,12 +57,30 @@ public class TipoMascotaDao extends Conexion implements GenericoDao<TipoMascotaV
 
     @Override
     public List<TipoMascotaVo> consultar() {
+        PreparedStatement sentencia;
         return null;
     }
 
     @Override
     public TipoMascotaVo consultar(int id) {
-        return null;
+        PreparedStatement sentencia;
+        TipoMascotaVo obj = new TipoMascotaVo();
+        try {
+            conectar();
+            String sql = "select * from tipo_mascota where = id_tipo_mascota = ?";
+            sentencia = cnn.prepareStatement(sql);
+            sentencia.setInt(1, id);
+            ResultSet rs = sentencia.executeQuery();
+            if (rs.next()) {
+                obj.setIdTipoMascota(rs.getInt("id_tipo_mascota"));
+                obj.setNombre(rs.getString("nombre"));
+                obj.setEstado(rs.getBoolean("estado"));
+            }
+        } catch (Exception e) {
+        e.printStackTrace(System.err);
+        } finally {
+            desconectar();
+        }
+            return obj;
     }
-    
 }
