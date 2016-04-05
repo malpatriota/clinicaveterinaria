@@ -5,7 +5,7 @@ import co.edu.intecap.clinicaveterinaria.modelo.dao.MascotaDao;
 import co.edu.intecap.clinicaveterinaria.modelo.vo.MascotaVo;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 
 
@@ -13,10 +13,10 @@ public class MascotaDelegado {
     
     // atributos de clase que son constantes (Su valor como objeto
     // no puede cambiar)
-    private final JFrame contenedor;
+    private final JPanel contenedor;
     private final MascotaDao mascotaDao;
 
-    public MascotaDelegado(JFrame contenedor) {
+    public MascotaDelegado(JPanel contenedor) {
         // asignacion indical del valor de las constantes
         this.contenedor = contenedor;
         this.mascotaDao = new MascotaDao();

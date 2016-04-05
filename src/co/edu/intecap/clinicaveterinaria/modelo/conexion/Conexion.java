@@ -19,7 +19,7 @@ public class Conexion {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             cnn = DriverManager.getConnection(
-                    "jdbc:mysql://169.254.43.21:3306/veterninaria",
+                    "jdbc:mysql://169.254.43.21:3306/veterinaria",
                     "root",
                     ""); // contraseña en usuario root siempre es vacia
         } catch (Exception e) {

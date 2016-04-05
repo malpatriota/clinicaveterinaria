@@ -5,7 +5,7 @@ import co.edu.intecap.clinicaveterinaria.modelo.dao.HistoriaDao;
 import co.edu.intecap.clinicaveterinaria.modelo.vo.HistoriaVo;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 
 
@@ -13,10 +13,10 @@ public class HistoriaDelegado {
     
     // atributos de clase que son constantes (Su valor como objeto
     // no puede cambiar)
-    private final JFrame contenedor;
+    private final JPanel contenedor;
     private final HistoriaDao historiaDao;
 
-    public HistoriaDelegado(JFrame contenedor) {
+    public HistoriaDelegado(JPanel contenedor) {
         // asignacion indical del valor de las constantes
         this.contenedor = contenedor;
         this.historiaDao = new HistoriaDao();

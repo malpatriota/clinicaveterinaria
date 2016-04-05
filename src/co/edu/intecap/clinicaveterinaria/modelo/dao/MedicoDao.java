@@ -24,7 +24,7 @@ public class MedicoDao extends Conexion implements GenericoDao<MedicoVo> {
         PreparedStatement sentencia = null;
         try {
             conectar();
-            String sql = "insert into consulta(nombre,correo,documento,tarjeta_profesional,estado) values(?,?,?,?,?,?)";
+            String sql = "insert into medico(nombre,correo,documento,tarjeta_profesional,estado) values(?,?,?,?,?,?)";
             sentencia = cnn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             sentencia.setString(1, object.getNombre());
             sentencia.setString(2, object.getCorreo());
@@ -48,7 +48,7 @@ public class MedicoDao extends Conexion implements GenericoDao<MedicoVo> {
         PreparedStatement sentencia;
         try {
         conectar();    
-        String sql = "update medio set id_medico = ?, nombre = ?, edad= ?, id_tipo_mascota = ?, id_cliente = ?, where id_medico = ?";
+        String sql = "update medico set id_medico = ?, nombre = ?, edad= ?, id_tipo_mascota = ?, id_cliente = ?, where id_medico = ?";
         sentencia = cnn.prepareStatement(sql);
         sentencia.setString(1, object.getNombre());
         sentencia.setString(2, object.getCorreo());
