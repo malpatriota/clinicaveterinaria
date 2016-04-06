@@ -9,6 +9,8 @@ import co.edu.intecap.clinicaveterinaria.control.TipoMascotaDelegado;
 import co.edu.intecap.clinicaveterinaria.modelo.vo.TipoMascotaVo;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,7 +20,8 @@ import javax.swing.table.DefaultTableModel;
 public class TipoMascotaPanel extends javax.swing.JPanel {
 
     private DefaultTableModel modelo;
-    
+    private final TipoMascotaVo tipoMascotaVo;
+
     /**
      * Creates new form TipoMascotaPanel
      */
@@ -26,14 +29,14 @@ public class TipoMascotaPanel extends javax.swing.JPanel {
         initComponents();
         configurarTabla();
         llenarTabla(new TipoMascotaDelegado(this).consultarTipoMascota(), modelo);
+        this.tipoMascotaVo = new TipoMascotaVo();
     }
 
     /* 04 - 04 - 2016
-    Método para obtener valores del GUI y registrar un
-    nuevo tipo de mascota*/
-    private void registrarTipoMascota(){
-        TipoMascotaVo tipoMascotaVo = new TipoMascotaVo();
-    // asignar nombre del tipo de mascota
+     Método para obtener valores del GUI y registrar un
+     nuevo tipo de mascota*/
+    private void registrarTipoMascota() {
+        // asignar nombre del tipo de mascota
         tipoMascotaVo.setNombre(txtNombre.getText());
         tipoMascotaVo.setEstado(cbxEstado.isSelected());
         new TipoMascotaDelegado(this).registrarTipoMascota(tipoMascotaVo);
@@ -41,20 +44,31 @@ public class TipoMascotaPanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "Tipo de mascota Registrado",
                 "Registro de datos", JOptionPane.INFORMATION_MESSAGE
         );
+        refrescarTabla();
+        limpiarCampos();
+
     }
-    
+
+    /* 
+     Permite establecer los parametros iniciales de una tabla
+     */
     private void configurarTabla() {
         modelo = new DefaultTableModel();
         modelo.addColumn("Id Mascota");
         modelo.addColumn("Nombre");
         modelo.addColumn("estado");
         tblTipoMascota.setModel(modelo);
-        
+        tblTipoMascota.getSelectionModel().addListSelectionListener(tableListener);
+
+//      Carga una lista de tipos de mascota desde la base de datos
+//      a la tabla de la interfaz gráfica de usuari0       
+//      @param listaTipoMascota lista de tipos de mascota de la base de datos
+//      @param modelo Modelo de tabla con la estructura de los datos a cargar
     }
-    
+
     private void llenarTabla(List<TipoMascotaVo> listaTipoMascota, DefaultTableModel modelo) {
         for (TipoMascotaVo tipoMascotaVo : listaTipoMascota) {
-            Object [] fila = new Object [3];
+            Object[] fila = new Object[3];
             fila[0] = tipoMascotaVo.getIdTipoMascota();
             fila[1] = tipoMascotaVo.getNombre();
             fila[2] = tipoMascotaVo.isEstado();
@@ -62,7 +76,25 @@ public class TipoMascotaPanel extends javax.swing.JPanel {
         }
         tblTipoMascota.updateUI();
     }
-    
+
+    /**
+     * Actualiza la información de la tabla con cada vez que se realiza un
+     * registro
+     */
+    private void refrescarTabla() {
+        /**
+         * Esto limpia los duplicados
+         */
+        modelo.setRowCount(0);
+        List<TipoMascotaVo> listaMascotas = new TipoMascotaDelegado(this).consultarTipoMascota();
+        llenarTabla(listaMascotas, modelo);
+    }
+
+    private void limpiarCampos() {
+        txtNombre.setText(""); //con este comando se limpia
+        cbxEstado.setSelected(false);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,7 +189,32 @@ public class TipoMascotaPanel extends javax.swing.JPanel {
 // TODO add your handling code here:
     }//GEN-LAST:event_bntGuardarActionPerformed
 
+    ListSelectionListener tableListener = new ListSelectionListener() {
 
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (tblTipoMascota.getSelectedRow() > -1) {
+                // se obtiene el ID de la fila seleccionada en la tabla
+                int id = (int) tblTipoMascota.getValueAt(tblTipoMascota.getSelectedRow(), 0);
+                // consultar en la base de datos por ese id seleccionado y guardar
+                // el resultado de la consulta en un nuevo object de TipoMascotaVo
+                TipoMascotaVo tMvo = new TipoMascotaDelegado(TipoMascotaPanel.this).consultarTipoMascota(id);
+                // asignar los valores obtenidos de la consulta a la constante
+                tipoMascotaVo.setIdTipoMascota(tMvo.getIdTipoMascota());
+                tipoMascotaVo.setNombre(tMvo.getNombre());
+                tipoMascotaVo.setEstado(tMvo.isEstado() );
+                // llenar campos del formulario
+                llenarCampos();
+            }
+        }
+    }; // aquí se añadió el punto y coma (;) después de implementar el ListSelectionListener
+    // cuando es un objeto
+
+    private void llenarCampos() {
+        txtNombre.setText(tipoMascotaVo.getNombre());
+        cbxEstado.setSelected(tipoMascotaVo.isEstado());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntGuardar;
     private javax.swing.JCheckBox cbxEstado;
