@@ -5,6 +5,12 @@
  */
 package co.edu.intecap.clinicaveterinaria.vista.paneles;
 
+import co.edu.intecap.clinicaveterinaria.control.ClienteDelegado;
+import co.edu.intecap.clinicaveterinaria.control.TipoMascotaDelegado;
+import co.edu.intecap.clinicaveterinaria.modelo.vo.ClienteVo;
+import co.edu.intecap.clinicaveterinaria.modelo.vo.TipoMascotaVo;
+import java.util.List;
+
 /**
  *
  * @author INTECAP
@@ -12,12 +18,44 @@ package co.edu.intecap.clinicaveterinaria.vista.paneles;
 public class MascotaPanel extends javax.swing.JPanel {
 
     /**
+     * Lista que contiene los tipos de mascotas existentes en la base de datos
+     */
+    private List<TipoMascotaVo> listaTipoMascota;
+
+    /**
+     * Lista que contiene los clientes existentes en la base de datos
+     */
+    private List<ClienteVo> listaClientes;
+
+    /**
      * Creates new form MascotaPanel
      */
     public MascotaPanel() {
         initComponents();
+        // cargar con datos la lista de tipo de mascota
+        this.listaTipoMascota = new TipoMascotaDelegado(this).consultarTipoMascota();
+        // cargar con datos la lista de clientes
+        this.listaClientes = new ClienteDelegado(this).consultarClientes();
+        configurarCombos();
     }
 
+    private void configurarCombos() {
+        cboTipoMascota.addItem("Seleccione un tipo de mascota");
+        cboCliente.addItem("Seleccione un cliente");
+        // se carga el comboBox con la información de la lista consutlada en la
+        // base de datos de tipos de mascota
+        for (TipoMascotaVo tipoMascotaVo : listaTipoMascota) {
+            cboTipoMascota.addItem(tipoMascotaVo.getNombre());
+        }
+        for (ClienteVo clienteVo : listaClientes) {
+            cboCliente.addItem(clienteVo.getNombre());
+        }
+    }
+    private int obtenerIdTipoMascotaCombo(){
+        int idSeleccionado = cboTipoMascota.getSelectedIndex();
+        int idTipoMascota = listaTipoMascota.get(idSeleccionado -1).getIdTipoMascota();
+        return idTipoMascota;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,14 +75,12 @@ public class MascotaPanel extends javax.swing.JPanel {
         cboTipoMascota = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
         cboCliente = new javax.swing.JComboBox();
-        tblMascota = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        JScrollPane1 = new javax.swing.JScrollPane();
+        tblMascota = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
         btnGuardar = new javax.swing.JButton();
 
         jLabel1.setText("Nombre:");
-
-        txtNombre.setText("jTextField1");
 
         jLabel2.setText("Edad:");
 
@@ -54,13 +90,9 @@ public class MascotaPanel extends javax.swing.JPanel {
 
         jLabel4.setText("Tipo de mascota:");
 
-        cboTipoMascota.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel5.setText("Cliente:");
 
-        cboCliente.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblMascota.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -71,7 +103,7 @@ public class MascotaPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tblMascota.setViewportView(jTable1);
+        JScrollPane1.setViewportView(tblMascota);
 
         btnGuardar.setText("Guardar");
 
@@ -82,7 +114,7 @@ public class MascotaPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tblMascota, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(JScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -137,13 +169,14 @@ public class MascotaPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tblMascota, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(JScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane JScrollPane1;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox cboCliente;
     private javax.swing.JComboBox cboTipoMascota;
@@ -154,8 +187,7 @@ public class MascotaPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JScrollPane tblMascota;
+    private javax.swing.JTable tblMascota;
     private javax.swing.JSpinner txtEdad;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
